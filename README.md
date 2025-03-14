@@ -84,28 +84,27 @@ Instructions to start and test the Slippy Map Server.
 
 ## Implementation Details
 
-This implementation uses Node.js with Express for the backend server and React with Mapbox for the frontend. The server processes GeoTIFF files and serves map tiles in real-time.
+This implementation uses Python Flask for the backend server and Next.js with Mapbox GL for the frontend. The server processes GeoTIFF files and serves map tiles in real-time.
 
 ### Prerequisites 
 
 **Backend Dependencies:**
 ```
-Node.js 14+
-npm
+Python 3.8+
+pip
 ```
 
 **Frontend Dependencies:**
 ```
-Node.js 14+
-npm
+Node.js 18+
+pnpm
 ```
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd <project-folder>
+git clone git@github.com:PlonGuo/TiltServer.git
 ```
 
 2. Set up the backend:
@@ -113,33 +112,35 @@ cd <project-folder>
 # Navigate to backend directory
 cd backend
 
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
-npm install
+pip install -r requirements.txt
 ```
 
 3. Set up the frontend:
 ```bash
 cd mapbox
-npm install
+pnpm install
 ```
 
 ### Running the Server
 
 1. Start the backend server:
 ```bash
-# From the backend directory
-npm start
+# From the backend directory, with venv activated
+cd backend
+source venv/bin/activate
+python server.py
 ```
 
 2. Start the frontend development server:
 ```bash
 # From another terminal, in the mapbox directory
-npm start
+pnpm dev
 ```
-
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
 
 ### API Endpoints
 
@@ -154,34 +155,31 @@ The server provides the following endpoint:
 
 The system consists of two main components:
 
-1. **Backend Server (Node.js/Express)**
+1. **Backend Server (Python/Flask)**
    - Handles tile requests
-   - Processes GeoTIFF data using GDAL
+   - Processes GeoTIFF data using rasterio
    - Generates PNG tiles
+   - Implements CORS for frontend access
 
-2. **Frontend (React/Mapbox)**
+2. **Frontend (Next.js/Mapbox)**
+   - Uses Next.js 13+ with App Router
+   - Implements client-side rendering for Mapbox
    - Displays the interactive map
-   - Requests tiles from the backend
    - Handles user interaction
 
 ### Libraries Used
 
 - **Backend:**
-  - Express: Web framework
-  - @mapbox/node-gdal-async: GeoTIFF processing
-  - sharp: Image processing
-  - cors: Cross-origin resource sharing
+  - Flask: Web framework
+  - rasterio: GeoTIFF processing
+  - Pillow: Image processing
+  - mercantile: Tile coordinate calculations
+  - flask-cors: Cross-origin resource sharing
 
 - **Frontend:**
-  - React: UI framework
+  - Next.js: React framework
   - Mapbox GL JS: Map rendering
-  - Other dependencies as specified in package.json
+  - Tailwind CSS: Styling
 
-### Notes
 
-- The server is configured for development use only
-- CORS is enabled for localhost development
-- The tile server is optimized for the provided snowdepth.tiff file but can handle other GeoTIFF files
-- Tile generation is done on-the-fly for maximum flexibility
 
-Good luck, and happy coding! 🚀
